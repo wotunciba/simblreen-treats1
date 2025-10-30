@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simblreen Treat - Candle Puzzle</title>
+<!-- 引入万圣节字体 -->
+<link href="https://fonts.googleapis.com/css2?family=Nosifer&display=swap" rel="stylesheet">
+<style>
+  body {
+    background-color: #0a0a0a;
+    color: #89ff0f;
+    font-family: 'Trebuchet MS', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  h1 {
+    font-family: 'Nosifer', cursive;
+    font-size: 3rem;
+    color: #ff5500;
+    text-shadow: 0 0 8px #65c600;
+    margin-bottom: 20px;
+  }
+  .instructions {
+    font-size: 1.2rem;
+    color: #f5f3e7;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .candle-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  .candle {
+    width: 100px;
+    height: 133px;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  .hidden {
+    display: none;
+  }
+  #treat-btn {
+    font-size: 2rem;
+    background-color: #ff7518;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: none;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #ff7518;
+    transition: 0.3s;
+  }
+  #treat-btn:hover {
+    background-color: #ff5500;
+  }
+</style>
+</head>
+<body>
+
+<h1>Simblreen Candle Puzzle 🎃</h1>
+<div class="instructions">
+  <p>解开谜题，按照正确顺序点亮蜡烛！若顺序错了，蜡烛会熄灭，重新开始。</p>
+  <p>正确顺序后，你将解锁南瓜礼物！</p>
+</div>
+
+<div class="candle-container">
+  <img src="candle_white_off.png" class="candle" id="candle1" data-color="white" onclick="lightCandle(1)">
+  <img src="candle_blue_off.png" class="candle" id="candle2" data-color="blue" onclick="lightCandle(2)">
+  <img src="candle_green_off.png" class="candle" id="candle3" data-color="green" onclick="lightCandle(3)">
+</div>
+
+<button id="treat-btn" onclick="getTreat()">🎃 Get Treat</button>
+
+<script>
+  // 蜡烛的正确顺序
+  const correctOrder = ['white', 'blue', 'green']; 
+  let clickedOrder = [];
+  let isGameOver = false;
+
+  // 音效
+  const lightingSound = new Audio('lighting.mp3');  // 蜡烛点燃音效
+  const extinguishSound = new Audio('extinguish.mp3');  // 蜡烛熄灭音效
+
+  // 蜡烛点亮功能
+  function lightCandle(candleNumber) {
+    if (isGameOver) return;
+
+    // 获取蜡烛颜色
+    const candleColor = document.getElementById(`candle${candleNumber}`).dataset.color;
+
+    // 用户点击的顺序
+    clickedOrder.push(candleColor);
+
+    // 根据用户点击的顺序，点亮蜡烛
+    document.getElementById(`candle${candleNumber}`).src = `candle_${candleColor}_on.png`;
+    lightingSound.play();
+
+    // 检查顺序
+    if (clickedOrder[clickedOrder.length - 1] !== correctOrder[clickedOrder.length - 1]) {
+      // 如果顺序错误，重置游戏
+      extinguishAllCandles();
+      isGameOver = true;
+      setTimeout(() => alert('顺序错误，重来！'), 500);
+    } else if (clickedOrder.length === correctOrder.length) {
+      // 完成正确顺序，显示南瓜按钮
+      setTimeout(() => {
+        document.getElementById('treat-btn').style.display = 'block';
+      }, 500);
+    }
+  }
+
+  // 熄灭所有蜡烛
+  function extinguishAllCandles() {
+    for (let i = 1; i <= 3; i++) {
+      const candle = document.getElementById(`candle${i}`);
+      const color = candle.dataset.color;
+      candle.src = `candle_${color}_off.png`;
+    }
+    extinguishSound.play();
+    clickedOrder = [];
+  }
+
+  // 获取 Treat 按钮点击事件
+  function getTreat() {
+    window.open('https://wotunciba.tumblr.com/simblreentreat1', '_blank');
+  }
+</script>
+
+</body>
+</html>
